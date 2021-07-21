@@ -1,0 +1,34 @@
+<head>
+  <script src="static/jquery.min.js"></script>
+  <script src="static/socket.io.min.js"></script>
+</head>
+
+<body>
+  <img src="{{ url_for('video_feed', com=0) }}" width="540px" height="540px" id='img-0'>
+  <img src="{{ url_for('video_feed', com=2) }}" width="540px" height="540px" id='img-1'><br>
+  <select id='selected-img'>
+    <option value=0 selected>0</option>
+    <option value=2>2</option>
+  </select>
+  <button id="send-dicom">发送图片</button>
+  <script>
+
+$(document).ready(()=>{
+  let IOIMAGE = io('/');
+
+  $('#send-dicom').on('click', (e)=>{
+    let com = parseInt($('#selected-img').val())
+
+    IOIMAGE.emit('snapshot', {'com': com}, (answer)=>{ console.log(answer) })
+  })
+
+  
+
+})
+
+
+  </script>
+</body>
+
+
+<footer></footer>

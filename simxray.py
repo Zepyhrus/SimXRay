@@ -40,8 +40,7 @@ def gen_frames(com):
       frame = buffer.tobytes()
       R.set(str(com), frame)
 
-      yield (b'--frame\r\n'
-      b'Content-Type: image/bmp\r\n\r\n' + frame + b'\r\n')
+      yield (b'--frame\r\nContent-Type: image/bmp\r\n\r\n' + frame + b'\r\n')
 
 
 
@@ -55,11 +54,12 @@ def video_feed(com):
 def io_camera(message):
   frame = R.get(str(message['com']))
 
-  with open(f'{message["com"]}.bmp', 'wb') as f:
+  image = f'{message["com"]}.bmp'
+  with open(image, 'wb') as f:
     f.write(frame)
 
 
-  return {'success': True}
+  return {'success': True, 'image': image}
 
 if __name__ == '__main__':
   sio.run(app, host='0.0.0.0', port=5000)

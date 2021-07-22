@@ -1,25 +1,38 @@
 <head>
   <script src="static/jquery.min.js"></script>
   <script src="static/socket.io.min.js"></script>
+  <script></script>
 </head>
 
 <body>
-  <img src="{{ url_for('video_feed', com=0) }}" width="540px" height="540px" id='img-0'>
-  <img src="{{ url_for('video_feed', com=2) }}" width="540px" height="540px" id='img-1'><br>
-  <select id='selected-img'>
-    <option value=0 selected>0</option>
-    <option value=2>2</option>
-  </select>
+  <div style="padding: 0px; margin: 0px;">
+    <div id='div-0' style="display: inline-block; padding: 10px;">
+      <img src="{{ url_for('video_feed', com=0) }}" width="540px" height="540px" id='img-0'>
+    </div><div id='div-2' style="display: inline-block; padding: 10px;">
+      <img src="{{ url_for('video_feed', com=2) }}" width="540px" height="540px" id='img-2'><br>
+    </div>
+  </div>
+  
   <button id="send-dicom">发送图片</button>
   <script>
 
 $(document).ready(()=>{
   let IOIMAGE = io('/');
+  let SELECTED = 0;
+
+  for (let persp of [0, 2]) {
+    $(`#div-${persp}`).on('click', (e) => {
+      for (let p of [0, 2]) {
+        $(`#div-${p}`).css({ 'backgroundColor': 'white' })
+      }
+      
+      $(`#div-${persp}`).css({ 'backgroundColor': 'yellow' })
+      SELECTED = parseInt(persp)
+    })
+  }
 
   $('#send-dicom').on('click', (e)=>{
-    let com = parseInt($('#selected-img').val())
-
-    IOIMAGE.emit('snapshot', {'com': com}, (answer)=>{ console.log(answer) })
+    IOIMAGE.emit('snapshot', {'com': SELECTED}, (answer)=>{ console.log(answer) })
   })
 })
 

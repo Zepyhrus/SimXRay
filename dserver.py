@@ -36,7 +36,6 @@ def handle_store(event, storage_dir):
     raise Exception('Not support pixel data format...')
 
   cv2.imwrite(os.path.join(storage_dir, ds.SOPInstanceUID + '.bmp'), img)
-
   
   return 0x0000
 

@@ -45,6 +45,7 @@ def gen_frames(com):
       break
     else:
       h, w, c = frame.shape # 480, 640, 3
+      frame = frame[:, ::-1, :]
       frame = cv2.resize(frame[:, (w-h)//2:(w-h)//2+h, :], (1024, 1024))
       ret, buffer = cv2.imencode('.bmp', frame)
       R.set(str(com), frame.tobytes())

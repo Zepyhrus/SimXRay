@@ -4,14 +4,12 @@
   <script></script>
 </head>
 
-<body>
-  <div style="padding: 0px; margin: 0px;">
-    <div id='div-0' style="display: inline-block; padding: 10px;">
-      <img src="{{ url_for('video_feed', com=0) }}" width="540px" height="540px" id='img-0'>
-    </div><div id='div-2' style="display: inline-block; padding: 10px;">
-      <img src="{{ url_for('video_feed', com=2) }}" width="540px" height="540px" id='img-2'><br>
-    </div>
-  </div>
+<body style="padding: 0px; margin: 0px;">
+  <div id='div-0' style="display: inline-block; padding: 5px;">
+    <img src="{{ url_for('video_feed', com=0) }}" width="720px" height="720px" id='img-0'>
+  </div><div id='div-2' style="display: inline-block; padding: 5px;">
+    <img src="{{ url_for('video_feed', com=2) }}" width="720px" height="720px" id='img-2'><br>
+  </div><br>
   
   <button id="send-dicom">发送图片</button>
   <script>

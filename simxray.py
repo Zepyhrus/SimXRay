@@ -69,7 +69,7 @@ def io_camera(message):
   ds = dcmread('./template.dcm')
   update_ds(ds, frame)
 
-  assoc = current_app.config['AE'].associate('', 11112, ae_title=b'JDICOM')
+  assoc = current_app.config['AE'].associate('', 5104, ae_title=b'JDICOM')
   
   if assoc.is_established:
     answer = assoc.send_c_store(ds)

@@ -14,7 +14,11 @@ from dclient import update_ds
 
 
 TEMPLATE = './template.dcm'
-R = Redis()
+R = Redis(
+  host='192.168.1.25',
+  port=6379,
+  db=1
+)
 
 app = Flask(__name__)
 app.debug = True

@@ -45,4 +45,4 @@ if __name__ == '__main__':
 
 
   print('server starting...')
-  ae.start_server(('localhost', 5104), block=True, evt_handlers=handlers)
+  ae.start_server(('0.0.0.0', 5104), block=True, evt_handlers=handlers)

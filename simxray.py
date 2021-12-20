@@ -16,10 +16,11 @@ from pynetdicom import AE
 from pynetdicom.sop_class import XRayAngiographicImageStorage
 from dclient import update_ds
 
+HOST = '192.168.1.25'
 
 TEMPLATE = './template.dcm'
 R = Redis(
-  host='192.168.1.25',
+  host=HOST,
   db=0
 )
 
@@ -31,7 +32,7 @@ app.config['AE'] = AE()
 app.config['AE'].add_requested_context(XRayAngiographicImageStorage)
 app.config['AE'].ae_title = b'XA'
 
-sio = SocketIO(app, message_queue='redis://192.168.1.25:6379/0')
+sio = SocketIO(app, message_queue=f'redis://{HOST}/0')
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -76,7 +77,7 @@ def io_camera(message):
   ds = dcmread('./template.dcm')
   update_ds(ds, frame)
 
-  assoc = current_app.config['AE'].associate('localhost', 5104, ae_title=b'JDICOM')
+  assoc = current_app.config['AE'].associate(HOST, 5104, ae_title=b'JDICOM')
   
   if assoc.is_established:
     answer = assoc.send_c_store(ds)
@@ -88,5 +89,5 @@ def io_camera(message):
   return {'succeed': succeed, 'answer': str(answer)}
 
 if __name__ == '__main__':
-  sio.run(app, host='0.0.0.0', port=5000)
+  sio.run(app, host='0.0.0.0', port=5001)
 

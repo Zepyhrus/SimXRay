@@ -16,7 +16,7 @@ from pynetdicom import AE
 from pynetdicom.sop_class import XRayAngiographicImageStorage
 from dclient import update_ds
 
-HOST = '192.168.1.25'
+HOST = '192.168.133.131'
 
 TEMPLATE = './template.dcm'
 R = Redis(

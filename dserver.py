@@ -45,4 +45,4 @@ if __name__ == '__main__':
   ae = AE()
   ae.add_supported_context(XRayAngiographicImageStorage, ImplicitVRLittleEndian)
 
-  ae.start_server(('', 11112), block=True, evt_handlers=handlers) # 
+  ae.start_server(('0.0.0.0', 5104), block=True, evt_handlers=handlers) # 

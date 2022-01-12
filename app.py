@@ -1,11 +1,15 @@
 import cv2
 from flask.globals import current_app
-
+import time
 import numpy as np
 
 from flask_socketio import SocketIO
 from flask import Flask, request, redirect, url_for, render_template, Response
 from redis import Redis
+
+import eventlet
+
+eventlet.monkey_patch(socket=True)
 
 from pydicom import dcmread
 from pynetdicom import AE
@@ -15,7 +19,7 @@ from dclient import update_ds
 
 TEMPLATE = './template.dcm'
 R = Redis(
-  host='192.168.1.25',
+  host='localhost',
   port=6379,
   db=1
 )
@@ -54,9 +58,8 @@ def gen_frames(com):
       ret, buffer = cv2.imencode('.bmp', frame)
       R.set(str(com), frame.tobytes())
 
+      time.sleep(0.1)
       yield (b'--frame\r\nContent-Type: image/bmp\r\n\r\n' + buffer.tobytes() + b'\r\n')
-
-
 
 @app.route('/video_feed?<int:com>')
 def video_feed(com):

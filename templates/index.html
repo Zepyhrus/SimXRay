@@ -5,8 +5,8 @@
 </head>
 
 <body style="padding: 0px; margin: 0px;">
-  <div id='div-0' style="display: inline-block; padding: 5px;">
-    <img src="{{ url_for('video_feed', com=0) }}" width="720px" height="720px" id='img-0'>
+  <div id='div-4' style="display: inline-block; padding: 5px;">
+    <img src="{{ url_for('video_feed', com=4) }}" width="720px" height="720px" id='img-4'>
   </div><div id='div-2' style="display: inline-block; padding: 5px;">
     <img src="{{ url_for('video_feed', com=2) }}" width="720px" height="720px" id='img-2'><br>
   </div><br>
@@ -16,11 +16,11 @@
 
 $(document).ready(()=>{
   let IOIMAGE = io('/');
-  let SELECTED = 0;
+  let SELECTED = 4;
 
-  for (let persp of [0, 2]) {
+  for (let persp of [4, 2]) {
     $(`#div-${persp}`).on('click', (e) => {
-      for (let p of [0, 2]) {
+      for (let p of [4, 2]) {
         $(`#div-${p}`).css({ 'backgroundColor': 'white' })
       }
       

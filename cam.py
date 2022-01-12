@@ -1,5 +1,3 @@
-import time
-from re import T
 import cv2
 import numpy as np
 

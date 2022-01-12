@@ -22,7 +22,7 @@ PREX = '20210716-131024-391'
 
 
 def sstamp():
-  return datetime.now().strftime('%Y%m%d%H%M%S%f')[:-3]
+  return datetime.now().strftime('%Y%m%d%H%M%S')+'.00.00'
 
 
 def update_ds(ds, bmp):
@@ -42,16 +42,9 @@ if __name__ == '__main__':
 
   print(len(dicoms), len(bmps))
 
-  if args.mode == 0:
-    # 实验室笔记本
-    host, port = '192.168.1.11', 5104
-    addr = (host, port)
-  elif args.mode == 1:
-    # 本机
-    host, port = 'localhost', 11112
-    addr = (host, port)
-  else:
-    raise Exception('不支持的Net DICOM模式')
+
+  host, port = 'localhost', 5104
+  addr = (host, port)
 
   ae = AE()
   ae.add_requested_context(XRayAngiographicImageStorage)
@@ -59,8 +52,8 @@ if __name__ == '__main__':
   print(f'associating {host, port}...')  
   assoc = ae.associate(host, port, ae_title=b'JDICOM')
 
-  ds = pydicom.dcmread('./d.dcm')
-  update_ds(ds, cv2.imread('./0.bmp'))
+  ds = pydicom.dcmread('./template.dcm')
+  update_ds(ds, cv2.imread('out/1.2.840.113780.990001.92728050044.20211226112452.1.40.bmp'))
 
 
   if assoc.is_established:

@@ -6,6 +6,10 @@ import numpy as np
 from flask_socketio import SocketIO
 from flask import Flask, request, redirect, url_for, render_template, Response
 from redis import Redis
+import eventlet
+
+eventlet.monkey_patch(socket=True)
+
 
 import eventlet
 
@@ -16,6 +20,7 @@ from pynetdicom import AE
 from pynetdicom.sop_class import XRayAngiographicImageStorage
 from dclient import update_ds
 
+HOST = '192.168.133.131'
 
 TEMPLATE = './template.dcm'
 R = Redis(
@@ -32,7 +37,7 @@ app.config['AE'] = AE()
 app.config['AE'].add_requested_context(XRayAngiographicImageStorage)
 app.config['AE'].ae_title = b'XA'
 
-sio = SocketIO(app)
+sio = SocketIO(app, message_queue=f'redis://{HOST}/0')
 
 W, H = 320, 240
 
@@ -78,7 +83,7 @@ def io_camera(message):
   ds = dcmread('./template.dcm')
   update_ds(ds, frame)
 
-  assoc = current_app.config['AE'].associate('', 5104, ae_title=b'JDICOM')
+  assoc = current_app.config['AE'].associate(HOST, 5104, ae_title=b'JDICOM')
   
   if assoc.is_established:
     answer = assoc.send_c_store(ds)

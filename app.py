@@ -21,7 +21,7 @@ TEMPLATE = './template.dcm'
 R = Redis(
   host='localhost',
   port=6379,
-  db=1
+  db=4
 )
 
 app = Flask(__name__)
@@ -34,6 +34,8 @@ app.config['AE'].ae_title = b'XA'
 
 sio = SocketIO(app)
 
+W, H = 320, 240
+
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -44,8 +46,8 @@ def index():
 
 def gen_frames(com):
   camera = cv2.VideoCapture(com)
-  camera.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
-  camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 960)
+  camera.set(cv2.CAP_PROP_FRAME_WIDTH, W)
+  camera.set(cv2.CAP_PROP_FRAME_HEIGHT, H)
 
   while True:
     success, frame = camera.read()

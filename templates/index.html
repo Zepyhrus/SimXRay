@@ -8,7 +8,7 @@
   <div style="display: inline-block; padding: 5px;">
     <img src="{{ url_for('video_feed', com=2) }}" width="512" height="512" id='img-2'>
   </div><div style="display: inline-block; padding: 5px;">
-    <img src="{{ url_for('video_feed', com=4) }}" width="512" height="512" id='img-4'><br>
+    <img src="{{ url_for('video_feed', com=3) }}" width="512" height="512" id='img-3'><br>
   </div><br>
   
   <button id="send-dicom">发送图片</button>
@@ -23,7 +23,7 @@ $(document).ready(()=>{
 
     this.parentElement.style.backgroundColor = 'yellow'
 
-    SELECTED = this.id == 'img-2' ? 2 : 4
+    SELECTED = this.id == 'img-2' ? 2 : 3
   })
 
   $('#send-dicom').on('click', (e)=>{

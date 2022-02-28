@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 
+from redis import Redis
 
 def bgr2fluro_registration(img):
   disk = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
@@ -24,33 +25,7 @@ def bgr2fluro_registration(img):
   return (I_out * 255).astype(np.uint8)
 
 
-
-if __name__ == '__main__':
-  # cap_ap = cv2.VideoCapture(2)
-  # cap_lt = cv2.VideoCapture(2)
-
-  # w, h = 160, 120
-
-  # cap_ap.set(cv2.CAP_PROP_FRAME_WIDTH, w)
-  # cap_ap.set(cv2.CAP_PROP_FRAME_HEIGHT, h)
-  # cap_lt.set(cv2.CAP_PROP_FRAME_WIDTH, w)
-  # cap_lt.set(cv2.CAP_PROP_FRAME_HEIGHT, h)
-
-  # while True:
-  #   success_ap, frame_ap = cap_ap.read()
-  #   success_lt, frame_lt = cap_lt.read()
-
-  #   if success_ap and success_lt:
-  #     cv2.imshow('_', np.hstack((frame_ap, frame_lt)))
-  #     if cv2.waitKey(1) == 27:
-  #       break
-    
-    # if success_lt:
-    #   cv2.imshow('_', frame_lt)
-    #   if cv2.waitKey(1) == 27:
-    #     break
-
-
+def cam_test():
   for i in range(6):
     cap = cv2.VideoCapture(i)
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 320)
@@ -61,13 +36,24 @@ if __name__ == '__main__':
     _, img = cap.read()
     if _:
       print(i)
-      # img = cv2.resize(img[:, 160:1120, :], (1024, 1024))
-      # # img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-      # cv2.imshow('__', img)
-      # cv2.imshow('_', bgr2fluro_registration(img))
 
-      # if cv2.waitKey(0) == 27:
-      #   break
+
+
+if __name__ == '__main__':
+  r = Redis.from_url('redis://localhost:6379/4')
+
+
+  frame = r.get('4')
+
+  print(len(frame))
+
+  img = np.frombuffer(frame, dtype=np.uint8)
+  img = img.reshape((1024, 1024, 3))
+  img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+  
+  cv2.imshow('_', img)
+  cv2.waitKey(0)
+  
 
 
 

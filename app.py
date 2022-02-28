@@ -71,6 +71,8 @@ def video_feed(com):
 
 @sio.on('snapshot')
 def io_camera(message):
+  print(message)
+
   frame = R.get(str(message['com']))
   succeed = False
   answer = ''

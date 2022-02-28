@@ -27,10 +27,14 @@ def sstamp():
 
 def update_ds(ds, bmp):
   ds.PixelData = bmp.tobytes() if type(bmp) is np.ndarray else bmp
+  current_sstamp = sstamp()
 
   for k in ['SOPInstanceUID', 'SeriesInstanceUID', 'StudyInstanceUID']:
     if k in ds:
-      ds[k].value = '.'.join((ds[k].value.split('.')[:-1] + [sstamp()]))
+      ds[k].value = '.'.join((ds[k].value.split('.')[:-1] + [current_sstamp]))
+  
+  ds['ContentDate'].value = current_sstamp[:6]
+  ds['ContentTime'].value = current_sstamp[6:]
 
 
 

@@ -33,8 +33,8 @@ def update_ds(ds, bmp):
     if k in ds:
       ds[k].value = '.'.join((ds[k].value.split('.')[:-1] + [current_sstamp]))
   
-  ds['ContentDate'].value = current_sstamp[:6]
-  ds['ContentTime'].value = current_sstamp[6:]
+  ds['ContentDate'].value = current_sstamp[:8]
+  ds['ContentTime'].value = current_sstamp[8:14]
 
 
 

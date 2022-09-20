@@ -35,6 +35,7 @@ app.config['AE'].ae_title = b'XA'
 sio = SocketIO(app, message_queue=REDIS_URL)
 
 W, H = 320, 240
+# W, H = 1280, 720
 
 
 @app.route('/', methods=['GET', 'POST'])

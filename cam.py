@@ -1,3 +1,5 @@
+
+import time
 import cv2
 import numpy as np
 
@@ -40,19 +42,19 @@ def cam_test():
 
 
 if __name__ == '__main__':
-  r = Redis.from_url('redis://localhost:6379/4')
+  cam_num = 2
+  cap = cv2.VideoCapture(cam_num)
+  cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+  cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 360)
+  # cap.set(cv2.CAP_PROP_AUTO_EXPOSURE, 5.0)
+  # cap.set(cv2.CAP_PROP_EXPOSURE, 156)
 
+  while True:
+    _, img = cap.read()
+    if _:
+      cv2.imshow(f'{cam_num}', img)
+      if cv2.waitKey(100) == 27: break
 
-  frame = r.get('4')
-
-  print(len(frame))
-
-  img = np.frombuffer(frame, dtype=np.uint8)
-  img = img.reshape((1024, 1024, 3))
-  img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-  
-  cv2.imshow('_', img)
-  cv2.waitKey(0)
   
 
 

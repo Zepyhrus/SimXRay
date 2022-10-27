@@ -16,7 +16,7 @@ from pynetdicom import AE
 from pynetdicom.sop_class import XRayAngiographicImageStorage
 from dclient import update_ds
 
-HOST = '192.168.133.131'
+HOST = '192.168.1.26'
 
 TEMPLATE = './template.dcm'
 R = Redis(
@@ -55,7 +55,10 @@ def gen_frames(com):
       h, w, c = frame.shape # 480, 640, 3
       frame = frame[:, ::-1, :]
       frame = cv2.resize(frame[:, (w-h)//2:(w-h)//2+h, :], (1024, 1024))
+      # frame = (cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)).astype(np.uint16)  * 256
       ret, buffer = cv2.imencode('.bmp', frame)
+
+      print(len(buffer))
       R.set(str(com), frame.tobytes())
 
       yield (b'--frame\r\nContent-Type: image/bmp\r\n\r\n' + buffer.tobytes() + b'\r\n')

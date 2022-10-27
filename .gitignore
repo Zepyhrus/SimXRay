@@ -133,6 +133,5 @@ dmypy.json
 # 无视图片和数据文件夹
 *.bmp
 *.jpg
-*.dcm
 out/
 

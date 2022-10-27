@@ -1,8 +1,9 @@
+
 import time
-from re import T
 import cv2
 import numpy as np
 
+from redis import Redis
 
 def bgr2fluro_registration(img):
   disk = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
@@ -26,28 +27,35 @@ def bgr2fluro_registration(img):
   return (I_out * 255).astype(np.uint8)
 
 
-
-if __name__ == '__main__':
-  persp = 'AP'
-
-
-  for i in range(4):
+def cam_test():
+  for i in range(6):
     cap = cv2.VideoCapture(i)
-    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
-    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 960)
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 320)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 240)
     # cap.set(cv2.CAP_PROP_AUTO_EXPOSURE, 5.0)
     # cap.set(cv2.CAP_PROP_EXPOSURE, 156)
 
     _, img = cap.read()
     if _:
       print(i)
-      # img = cv2.resize(img[:, 160:1120, :], (1024, 1024))
-      # # img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-      # cv2.imshow('__', img)
-      # cv2.imshow('_', bgr2fluro_registration(img))
 
-      # if cv2.waitKey(0) == 27:
-      #   break
+
+
+if __name__ == '__main__':
+  cam_num = 2
+  cap = cv2.VideoCapture(cam_num)
+  cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+  cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 360)
+  # cap.set(cv2.CAP_PROP_AUTO_EXPOSURE, 5.0)
+  # cap.set(cv2.CAP_PROP_EXPOSURE, 156)
+
+  while True:
+    _, img = cap.read()
+    if _:
+      cv2.imshow(f'{cam_num}', img)
+      if cv2.waitKey(100) == 27: break
+
+  
 
 
 

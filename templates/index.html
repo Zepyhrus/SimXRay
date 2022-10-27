@@ -5,30 +5,31 @@
 </head>
 
 <body style="padding: 0px; margin: 0px;">
-  <div id='div-0' style="display: inline-block; padding: 5px;">
-    <img src="{{ url_for('video_feed', com=0) }}" width="720px" height="720px" id='img-0'>
-  </div>
-  <br>
+  <div style="display: inline-block; padding: 5px;">
+    <img src="{{ url_for('video_feed', com=4) }}" width="512" height="512" id='img-0'>
+  </div><div style="display: inline-block; padding: 5px;">
+    <img src="{{ url_for('video_feed', com=2) }}" width="512" height="512" id='img-1'><br>
+  </div><br>
   
   <button id="send-dicom">发送图片</button>
   <script>
 
 $(document).ready(()=>{
   let IOIMAGE = io('/');
-  let SELECTED = 0;
+  let SELECTED = 4;
 
-  for (let persp of [0, 2]) {
-    $(`#div-${persp}`).on('click', (e) => {
-      for (let p of [0, 2]) {
-        $(`#div-${p}`).css({ 'backgroundColor': 'white' })
-      }
-      
-      $(`#div-${persp}`).css({ 'backgroundColor': 'yellow' })
-      SELECTED = parseInt(persp)
-    })
-  }
+  $('img').on('click', function() {
+    $('div').css({'background-color': 'white'})
+
+    this.parentElement.style.backgroundColor = 'yellow'
+
+    console.log(this.id, this.id == 'img-0')
+    SELECTED = this.id == 'img-0' ? 4 : 2
+  })
 
   $('#send-dicom').on('click', (e)=>{
+    console.log(SELECTED)
+
     IOIMAGE.emit('snapshot', {'com': SELECTED}, (answer)=>{ console.log(answer) })
   })
 })

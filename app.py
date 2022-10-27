@@ -51,7 +51,12 @@ def gen_frames(com):
   camera.set(cv2.CAP_PROP_FRAME_HEIGHT, H)
 
   while True:
-    success, frame = camera.read()
+    if com == 0:
+      frame = cv2.imread('static/pattern.png')
+    else:
+      frame = cv2.imread('static/ultimate-guide-about-lens-distortion-4.webp')
+    # success, frame = camera.read()
+    success = 1
     if not success:
       break
     else:

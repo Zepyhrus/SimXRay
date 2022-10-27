@@ -6,7 +6,7 @@
 
 <body style="padding: 0px; margin: 0px;">
   <div style="display: inline-block; padding: 5px;">
-    <img src="{{ url_for('video_feed', com=4) }}" width="512" height="512" id='img-0'>
+    <img src="{{ url_for('video_feed', com=0) }}" width="512" height="512" id='img-0'>
   </div><div style="display: inline-block; padding: 5px;">
     <img src="{{ url_for('video_feed', com=2) }}" width="512" height="512" id='img-1'><br>
   </div><br>
@@ -24,7 +24,7 @@ $(document).ready(()=>{
     this.parentElement.style.backgroundColor = 'yellow'
 
     console.log(this.id, this.id == 'img-0')
-    SELECTED = this.id == 'img-0' ? 4 : 2
+    SELECTED = this.id == 'img-0' ? 0 : 2
   })
 
   $('#send-dicom').on('click', (e)=>{

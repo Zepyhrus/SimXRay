@@ -41,18 +41,18 @@ def index():
 
 
 def gen_frames(com):
-  # camera = cv2.VideoCapture(com)
-  # camera.set(cv2.CAP_PROP_FRAME_WIDTH, W)
-  # camera.set(cv2.CAP_PROP_FRAME_HEIGHT, H)
+  camera = cv2.VideoCapture(com)
+  camera.set(cv2.CAP_PROP_FRAME_WIDTH, W)
+  camera.set(cv2.CAP_PROP_FRAME_HEIGHT, H)
 
   while True:
     
-    if com == 4:
-      frame = cv2.imread('static\pattern.png')
-    else:
-      frame = cv2.imread('static\distortion-4.png')
-    success = 1
-    # success, frame = camera.read()
+    # if com == 4:
+    #   frame = cv2.imread('static\pattern.png')
+    # else:
+    #   frame = cv2.imread('static\distortion-4.png')
+    # success = 1
+    success, frame = camera.read()
     if not success:
       break
     else:

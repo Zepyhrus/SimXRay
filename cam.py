@@ -42,7 +42,7 @@ def cam_test():
 
 
 if __name__ == '__main__':
-  cam_num = 2
+  cam_num = 0
   cap = cv2.VideoCapture(cam_num)
   cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
   cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 360)

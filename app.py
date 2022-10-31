@@ -6,13 +6,8 @@ import numpy as np
 from flask_socketio import SocketIO
 from flask import Flask, request, redirect, url_for, render_template, Response
 from redis import Redis
-import eventlet
-
-eventlet.monkey_patch(socket=True)
-
 
 import eventlet
-
 eventlet.monkey_patch(socket=True)
 
 from pydicom import dcmread
@@ -21,7 +16,7 @@ from pynetdicom.sop_class import XRayAngiographicImageStorage
 from dclient import update_ds
 
 TEMPLATE = './template.dcm'
-REDIS_URL = 'redis://localhost:6379/4'
+REDIS_URL = 'redis://127.0.0.1:6379/4'
 R = Redis.from_url(REDIS_URL)
 
 app = Flask(__name__)
@@ -46,19 +41,28 @@ def index():
 
 
 def gen_frames(com):
-  camera = cv2.VideoCapture(com)
-  camera.set(cv2.CAP_PROP_FRAME_WIDTH, W)
-  camera.set(cv2.CAP_PROP_FRAME_HEIGHT, H)
+  # camera = cv2.VideoCapture(com)
+  # camera.set(cv2.CAP_PROP_FRAME_WIDTH, W)
+  # camera.set(cv2.CAP_PROP_FRAME_HEIGHT, H)
 
   while True:
-    success, frame = camera.read()
+    
+    if com == 4:
+      frame = cv2.imread('static\pattern.png')
+    else:
+      frame = cv2.imread('static\distortion-4.png')
+    success = 1
+    # success, frame = camera.read()
     if not success:
       break
     else:
       h, w, c = frame.shape # 480, 640, 3
       frame = frame[:, ::-1, :]
       frame = cv2.resize(frame[:, (w-h)//2:(w-h)//2+h, :], (1024, 1024))
+      # frame = (cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)).astype(np.uint16)  * 256
       ret, buffer = cv2.imencode('.bmp', frame)
+
+      # print(len(buffer))
       R.set(str(com), frame.tobytes())
 
       time.sleep(0.1)

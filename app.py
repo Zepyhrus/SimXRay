@@ -46,7 +46,6 @@ def gen_frames(com):
   camera.set(cv2.CAP_PROP_FRAME_HEIGHT, H)
 
   while True:
-    
     # if com == 4:
     #   frame = cv2.imread('static\pattern.png')
     # else:

@@ -29,14 +29,13 @@ app.config['AE'].ae_title = b'XA'
 
 sio = SocketIO(app, message_queue=REDIS_URL)
 
-W, H = 320, 240
-# W, H = 1280, 720
+W, H = 1280, 960
 
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
   if request.method == 'GET':
-    return render_template('index.html')
+    return render_template('index.html', size=960)
   return redirect(url_for('index'))
 
 
@@ -46,31 +45,22 @@ def gen_frames(com):
   camera.set(cv2.CAP_PROP_FRAME_HEIGHT, H)
 
   while True:
-    # if com == 4:
-    #   frame = cv2.imread('static\pattern.png')
-    # else:
-    #   frame = cv2.imread('static\distortion-4.png')
-    # success = 1
     success, frame = camera.read()
     if not success:
-      break
-    else:
-      h, w, c = frame.shape # 480, 640, 3
-      frame = frame[:, ::-1, :]
-      frame = cv2.resize(frame[:, (w-h)//2:(w-h)//2+h, :], (1024, 1024))
-      # frame = (cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)).astype(np.uint16)  * 256
-      ret, buffer = cv2.imencode('.bmp', frame)
+      return
+    
+    # frame = frame[:, ::-1, :]
+    frame = cv2.resize(frame[:, (W-H)//2:(W+H)//2, :], (1024, 1024))
+    # frame = (cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)).astype(np.uint16)  * 256
+    res, buffer = cv2.imencode('.bmp', frame)
 
-      # print(len(buffer))
-      R.set(str(com), frame.tobytes())
+    R.set(str(com), frame.tobytes())
 
-      time.sleep(0.1)
-      yield (b'--frame\r\nContent-Type: image/bmp\r\n\r\n' + buffer.tobytes() + b'\r\n')
+    yield (b'--frame\r\nContent-Type: image/bmp\r\n\r\n' + buffer.tobytes() + b'\r\n')
 
 @app.route('/video_feed?<int:com>')
 def video_feed(com):
   return Response(gen_frames(com), mimetype='multipart/x-mixed-replace; boundary=frame')
-
 
 
 @sio.on('snapshot')

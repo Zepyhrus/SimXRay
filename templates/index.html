@@ -6,9 +6,9 @@
 
 <body style="padding: 0px; margin: 0px;">
   <div style="display: inline-block; padding: 5px;">
-    <img src="{{ url_for('video_feed', com=2) }}" width="{{ size }}" height="{{ size }}" id='img-0'>
+    <img src="{{ url_for('video_feed', com=ap) }}" width="{{ size }}" height="{{ size }}" id='img-0'>
   </div><div style="display: inline-block; padding: 5px;">
-    <img src="{{ url_for('video_feed', com=4) }}" width="{{ size }}" height="{{ size }}" id='img-1'><br>
+    <img src="{{ url_for('video_feed', com=lt) }}" width="{{ size }}" height="{{ size }}" id='img-1'><br>
   </div><br>
   
   <button id="send-dicom">发送图片</button>
@@ -16,7 +16,7 @@
 
 $(document).ready(()=>{
   let IOIMAGE = io('/');
-  let SELECTED = 4;
+  let SELECTED = "{{ ap }}";
 
   $('img').on('click', function() {
     $('div').css({'background-color': 'white'})
@@ -24,7 +24,7 @@ $(document).ready(()=>{
     this.parentElement.style.backgroundColor = 'yellow'
 
     console.log(this.id, this.id == 'img-0')
-    SELECTED = this.id == 'img-0' ? 2 : 4
+    SELECTED = this.id == 'img-0' ? "{{ ap }}" : "{{ lt }}"
   })
 
   $('#send-dicom').on('click', (e)=>{

@@ -15,6 +15,8 @@ from pynetdicom import AE
 from pynetdicom.sop_class import XRayAngiographicImageStorage
 from dclient import update_ds
 
+from urx.toolbox import yload, undistort
+
 TEMPLATE = './template.dcm'
 REDIS_URL = 'redis://127.0.0.1:6379/4'
 R = Redis.from_url(REDIS_URL)
@@ -30,12 +32,15 @@ app.config['AE'].ae_title = b'XA'
 sio = SocketIO(app, message_queue=REDIS_URL)
 
 W, H = 1280, 960
+AP, LT = 2, 4
+
+cfg = yload('urx/cfg.yaml')
 
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
   if request.method == 'GET':
-    return render_template('index.html', size=960)
+    return render_template('index.html', size=960, ap=AP, lt=LT)
   return redirect(url_for('index'))
 
 
@@ -44,6 +49,10 @@ def gen_frames(com):
   camera.set(cv2.CAP_PROP_FRAME_WIDTH, W)
   camera.set(cv2.CAP_PROP_FRAME_HEIGHT, H)
 
+  
+  mtx = np.array(cfg['A_AP_webcam'] if com == AP else cfg['A_LT_webcam'])
+  dist = np.array(cfg['D_AP_webcam'] if com == AP else cfg['D_LT_webcam'])
+
   while True:
     success, frame = camera.read()
     if not success:
@@ -51,8 +60,10 @@ def gen_frames(com):
     
     # frame = frame[:, ::-1, :]
     frame = cv2.resize(frame[:, (W-H)//2:(W+H)//2, :], (1024, 1024))
+    frame = undistort(frame, mtx, dist)
     # frame = (cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)).astype(np.uint16)  * 256
-    res, buffer = cv2.imencode('.bmp', frame)
+    
+    _, buffer = cv2.imencode('.bmp', frame)
 
     R.set(str(com), frame.tobytes())
 

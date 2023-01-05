@@ -12,6 +12,7 @@
   </div><br>
   
   <button id="send-dicom">发送图片</button>
+  <button id="save-image">保存截图</button>
   <script>
 
 $(document).ready(()=>{
@@ -28,9 +29,11 @@ $(document).ready(()=>{
   })
 
   $('#send-dicom').on('click', (e)=>{
-    console.log(SELECTED)
+    IOIMAGE.emit('snapshot', {'com': SELECTED}, (answer)=>{ console.log(SELECTED, answer) })
+  })
 
-    IOIMAGE.emit('snapshot', {'com': SELECTED}, (answer)=>{ console.log(answer) })
+  $('#save-image').on('click', (e) => {
+    IOIMAGE.emit('save-image', (ans)=>{ console.log(ans) })
   })
 })
 

@@ -1,8 +1,7 @@
-import cv2
-from flask.globals import current_app
-import time
-import numpy as np
+import time, os
+import cv2, numpy as np
 
+from flask.globals import current_app
 from flask_socketio import SocketIO
 from flask import Flask, request, redirect, url_for, render_template, Response
 from redis import Redis
@@ -13,7 +12,7 @@ eventlet.monkey_patch(socket=True)
 from pydicom import dcmread
 from pynetdicom import AE
 from pynetdicom.sop_class import XRayAngiographicImageStorage
-from dclient import update_ds
+from dclient import update_ds, sstamp
 
 from urx.toolbox import yload, undistort
 
@@ -24,7 +23,6 @@ R = Redis.from_url(REDIS_URL)
 app = Flask(__name__)
 app.debug = True
 app.config['SECRET_KEY'] = 'sim X-ray machine'
-app.config['DEBUG'] = True
 app.config['AE'] = AE()
 app.config['AE'].add_requested_context(XRayAngiographicImageStorage)
 app.config['AE'].ae_title = b'XA'
@@ -95,6 +93,24 @@ def io_camera(message):
       succeed = True
 
   return {'succeed': succeed, 'answer': str(answer)}
+
+@sio.on('save-image')
+def io_save():
+  try:
+    t = sstamp()
+    save_dir = f'static/data/{t}'
+
+    os.makedirs(save_dir, exist_ok=True)
+
+    img_AP = np.frombuffer(R.get(str(AP)), dtype=np.uint8).reshape((1024, 1024, 3))
+    img_LT = np.frombuffer(R.get(str(LT)), dtype=np.uint8).reshape((1024, 1024, 3))
+
+    cv2.imwrite(os.path.join(save_dir, 'AP.png'), img_AP)
+    cv2.imwrite(os.path.join(save_dir, 'LT.png'), img_LT)
+    
+    return {'succeed': True, 'message': f'saving to {save_dir}'}
+  except Exception as ex:
+    return {'succeed': False, 'message': str(ex)}
 
 if __name__ == '__main__':
   sio.run(app, host='0.0.0.0', port=5004)

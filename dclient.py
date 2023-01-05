@@ -21,7 +21,7 @@ debug_logger()
 PREX = '20210716-131024-391'
 
 
-def sstamp():
+def sstamp() -> str:
   return datetime.now().strftime('%Y%m%d%H%M%S')+'.00.00'
 
 

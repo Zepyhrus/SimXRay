@@ -134,4 +134,5 @@ dmypy.json
 *.bmp
 *.jpg
 out/
+static/data
 
